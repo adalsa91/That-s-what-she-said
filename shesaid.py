@@ -20,7 +20,7 @@ token = os.getenv("TOKEN")
 with open("triggers.txt", 'r') as f:
     triggers_list = f.read().strip().split(',')
 
-triggers_re = re.compile("|".join(triggers_list))
+triggers_re = re.compile("|".join(triggers_list), re.IGNORECASE)
 
 
 if mode == "dev":

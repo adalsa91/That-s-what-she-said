@@ -1,1 +1,1 @@
-gorda,grande,larga
+gorda,grande,larga,dura,duro
