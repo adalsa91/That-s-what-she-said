@@ -48,7 +48,10 @@ def start(update, context):
 
 def shesaid(update, context):
     if triggers_re.search(update.message.text):
-        update.message.reply_text("Eso dijo ella")
+        if update.effective_user.username == "Eidu123":
+            update.message.reply_text("Eso dijo tu madre")
+        else:
+            update.message.reply_text("Eso dijo ella")
 
 
 def error(update, context):
@@ -65,10 +68,8 @@ def main():
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
 
-    # on different commands - answer in Telegram
     dp.add_handler(CommandHandler("start", start))
 
-    # on noncommand i.e message - echo the message on Telegram
     dp.add_handler(MessageHandler(Filters.text, shesaid))
 
     # log all errors
