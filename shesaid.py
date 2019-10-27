@@ -3,6 +3,7 @@
 
 import logging
 import os
+import re
 import sys
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
@@ -15,6 +16,12 @@ logger = logging.getLogger(__name__)
 
 mode = os.getenv("MODE")
 token = os.getenv("TOKEN")
+
+with open("triggers.txt", 'r') as f:
+    triggers_list = f.read().strip().split(',')
+
+triggers_re = re.compile("|".join(triggers_list))
+
 
 if mode == "dev":
     def run(updater):
@@ -33,7 +40,6 @@ else:
     sys.exit(1)
 
 
-
 def start(update, context):
     """Send a message when the command /start is issued."""
     logger.info("User {} started bot".format(update.effective_user["id"]))
@@ -41,9 +47,8 @@ def start(update, context):
 
 
 def shesaid(update, context):
-    triggers = ['grande', 'gorda', 'larga']
-    if [ele for ele in triggers if(ele in update.message.text)]:
-        update.message.reply_text("That's what she said")
+    if triggers_re.search(update.message.text):
+        update.message.reply_text("Eso dijo ella")
 
 
 def error(update, context):
@@ -53,7 +58,7 @@ def error(update, context):
 
 def main():
     """Start the bot."""
-    logger.info("Starting bot")
+    logger.info("Starting bot in {} mode.".format(mode))
 
     updater = Updater(token, use_context=True)
 
@@ -71,11 +76,6 @@ def main():
 
     # Start the Bot
     run(updater)
-
-    # Run the bot until you press Ctrl-C or the process receives SIGINT,
-    # SIGTERM or SIGABRT. This should be used most of the time, since
-    # start_polling() is non-blocking and will stop the bot gracefully.
-    # updater.idle()
 
 
 if __name__ == '__main__':
